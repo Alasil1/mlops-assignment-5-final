@@ -1,24 +1,32 @@
 import os
 import mlflow
 import mlflow.sklearn
-from sklearn.datasets import load_breast_cancer
+from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 def train():
-    # Load datase
-    print("Loading breast cancer dataset...")
-    data = load_breast_cancer()
-    X_train, X_test, y_train, y_test = train_test_split(
-        data.data, data.target, test_size=0.2, random_state=42
+    print("Generating a large, complex dataset...")
+    # Creating a much harder classification problem with 5000 samples and 4 distinct classes
+    X, y = make_classification(
+        n_samples=5000, 
+        n_features=20, 
+        n_informative=12, 
+        n_redundant=2, 
+        n_classes=4,
+        flip_y=0.05, # adds a tiny bit of noise
+        random_state=42
     )
     
-    # Train model
-    # To intentionally lower accuracy below 0.85 (e.g., for testing failure screenshot), 
-    # you can change n_estimators=1 and max_depth=1
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
+    
     print("Training Random Forest model...")
-    model = RandomForestClassifier(n_estimators=100,max_depth = 10, random_state=42)
+    # To PASS the pipeline (> 0.85): Use n_estimators=100, max_depth=15
+    # To FAIL the pipeline (< 0.85): Use n_estimators=2, max_depth=2
+    model = RandomForestClassifier(n_estimators=100, max_depth=15, random_state=42)
     
     # Start MLflow run
     with mlflow.start_run() as run:
@@ -32,6 +40,7 @@ def train():
         # Log params and metrics
         mlflow.log_param("model_type", "RandomForestClassifier")
         mlflow.log_param("n_estimators", 100)
+        mlflow.log_param("max_depth", 15)
         mlflow.log_metric("accuracy", accuracy)
         
         # Log model
