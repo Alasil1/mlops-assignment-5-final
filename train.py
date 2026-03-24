@@ -1,31 +1,23 @@
 import os
 import mlflow
 import mlflow.sklearn
-from sklearn.datasets import make_classification
+from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
 def train():
-    print("Generating a large, complex dataset...")
-    # Creating a much harder classification problem with 5000 samples and 4 distinct classes
-    X, y = make_classification(
-        n_samples=5000, 
-        n_features=20, 
-        n_informative=12, 
-        n_redundant=2, 
-        n_classes=4,
-        flip_y=0.05, # adds a tiny bit of noise
-        random_state=42
-    )
+    print("Loading the Spambase dataset (~4.6k records)...")
+    # Spambase is a classic, real-world dataset with ~4,600 rows and 57 features
+    data = fetch_openml('spambase', version=1, as_frame=False, parser='auto')
     
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
+        data.data, data.target, test_size=0.2, random_state=42
     )
     
     print("Training Random Forest model...")
-    # To PASS the pipeline (> 0.85): Use n_estimators=100, max_depth=15
-    # To FAIL the pipeline (< 0.85): Use n_estimators=2, max_depth=2
+    # To PASS the pipeline (> 0.85): Use n_estimators=100, max_depth=15  (Accuracy ~ 95%)
+    # To FAIL the pipeline (< 0.85): Use n_estimators=1, max_depth=1     (Accuracy ~ 60%)
     model = RandomForestClassifier(n_estimators=100, max_depth=15, random_state=42)
     
     # Start MLflow run
