@@ -18,7 +18,7 @@ def train():
     print("Training Random Forest model...")
     # To PASS the pipeline (> 0.85): Use n_estimators=100, max_depth=15  (Accuracy ~ 95%)
     # To FAIL the pipeline (< 0.85): Use n_estimators=1, max_depth=1     (Accuracy ~ 60%)
-    model = RandomForestClassifier(n_estimators=100, max_depth=15, random_state=42)
+    model = RandomForestClassifier(n_estimators=1, max_depth=1, random_state=42)
     
     # Start MLflow run
     with mlflow.start_run() as run:
