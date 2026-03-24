@@ -18,7 +18,7 @@ def train():
     # To intentionally lower accuracy below 0.85 (e.g., for testing failure screenshot), 
     # you can change n_estimators=1 and max_depth=1
     print("Training Random Forest model...")
-    model = RandomForestClassifier(n_estimators=1,max_depth = 1, random_state=42)
+    model = RandomForestClassifier(n_estimators=100,max_depth = 10, random_state=42)
     
     # Start MLflow run
     with mlflow.start_run() as run:
