@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 
 def train():
     print("Loading the Spambase dataset (~4.6k records)...")
+    # Spambase is a classic, real-world dataset with ~4,600 rows and 57 features
     data = fetch_openml('spambase', version=1, as_frame=False, parser='auto')
     
     X_train, X_test, y_train, y_test = train_test_split(
@@ -15,8 +16,9 @@ def train():
     )
     
     print("Training Random Forest model...")
-
-    model = RandomForestClassifier(n_estimators=1, max_depth=1, random_state=42)
+    # To PASS the pipeline (> 0.85): Use n_estimators=100, max_depth=15  (Accuracy ~ 95%)
+    # To FAIL the pipeline (< 0.85): Use n_estimators=1, max_depth=1     (Accuracy ~ 60%)
+    model = RandomForestClassifier(n_estimators=100, max_depth=15, random_state=42)
     
     # Start MLflow run
     with mlflow.start_run() as run:
